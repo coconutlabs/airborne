@@ -1,7 +1,7 @@
 const leaflet = require('leaflet')
 
 const airplaneIcon = leaflet.icon({
-    iconUrl: '/img/airplane.png',
+    iconUrl: './img/airplane@2x.png',
     iconSize: [20, 20],
     iconAnchor: [10, 10],
     popupAnchor: [0, -5]
