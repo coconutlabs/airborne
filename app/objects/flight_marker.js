@@ -10,12 +10,15 @@ const airplaneIcon = leaflet.icon({
 const tooltipHtml = (flight, unit) => {
   let flightIdentifier, speed, altitude
 
-  flightIdentifier = `Flight ${flight.callsign}` || 'Unidentified Flight'
+  flightIdentifier =
+    flight.callsign ?
+    `Flight ${flight.callsign}` :
+    'Unidentified Flight'
   speed =
     unit == 'metric' ?
     `${Math.round(flight.kph)} kph` :
     `${Math.round(flight.mph)} mph`
-  altitude = 
+  altitude =
     unit == 'metric' ?
     `${Math.round(flight.altitudeM)} m` :
     `${Math.round(flight.altitudeFt)} ft`

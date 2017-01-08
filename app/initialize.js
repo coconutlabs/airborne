@@ -9,22 +9,37 @@ document.addEventListener('DOMContentLoaded', () => {
 	const AirborneFlightMarker = require('./objects/flight_marker')
 
 	const appMap = new AirborneMap('app-map')
+	let plottedFlights = new leaflet.FeatureGroup()
 
-	let allFlights = []
+	const plotFlights = () => {
+		const newFlightLayer = new leaflet.FeatureGroup()
 
-	FlightData.getAll((response) => {
-		console.log(`${response.states.length} flights updated ${moment.unix(response.time).format('dddd, MMMM Do YYYY, h:mm:ss a')}`)
+		FlightData.getAll((response) => {
+			const dataTimestamp = moment.unix(response.time).format('MMMM Do YYYY, h:mm:ss a')
+			console.log(`${response.states.length} flights updated ${dataTimestamp}`)
 
-		for (var i = 0; i < response.states.length; i++) {
-			let flight = new AirborneFlight(response.states[i])
-			if (!flight.isPlottable || flight.onGround) { continue; }
+			let plotCount = 0
 
-			let marker = new AirborneFlightMarker(flight)
-			marker.addTo(appMap)
+			for (let i = 0; i < response.states.length; i++) {
+				let flight = new AirborneFlight(response.states[i])
+				if (!flight.isPlottable || flight.onGround) { continue; }
 
-			allFlights.push(flight)
-		}
+				let marker = new AirborneFlightMarker(flight)
 
-		console.log(`Plotted ${allFlights.length} flights`);
-	})
+				newFlightLayer.addLayer(marker)
+
+				plotCount++
+			}
+
+			appMap.removeLayer(plottedFlights)
+			appMap.addLayer(newFlightLayer)
+			plottedFlights = newFlightLayer
+
+			console.log(`Plotted ${plotCount} flights`);
+
+			setTimeout(plotFlights, 10000)
+		})
+	}
+
+	plotFlights()
 });
