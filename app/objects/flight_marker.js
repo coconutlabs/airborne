@@ -1,4 +1,5 @@
 const leaflet = require('leaflet')
+require('leaflet-rotatedmarker')
 
 const airplaneIcon = leaflet.icon({
     iconUrl: './img/airplane@2x.png',
@@ -33,7 +34,8 @@ module.exports = class AirborneFlightMarker extends leaflet.Marker {
     super([ flight.latitude, flight.longitude ], {
       icon: airplaneIcon,
       title: flight.callsign,
-      className: `flight-${flight.callsign}`
+      rotationAngle: Math.round(flight.heading),
+      rotationOrigin: 'center center'
     })
     .bindTooltip(tooltipHtml(flight))
 
