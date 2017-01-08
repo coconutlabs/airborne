@@ -18,7 +18,7 @@ module.exports = class Flight {
     ] = stateVector
 
     this.icao24 = icao24 // string
-    this.callsign = callsign // string
+    this.callsign = (callsign ? callsign.trim() : null) // string
     this.originCountry = origin_country // string
     this.timePosition = time_position // unix timestamp (seconds)
     this.timeVelocity = time_velocity // unix timestamp (seconds)
@@ -31,6 +31,9 @@ module.exports = class Flight {
     this.verticalRate = vertical_rate // (meters/second)
     this.sensors = sensors // array of ids
   }
+
+  get altitudeFt() { return this.altitude * 3.28084 }
+  get altitudeM() { return this.altitude }
 
   get mph() { return this.velocity * 2.23694 }
   get kph() { return this.velocity * 3.6 }

@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		for (var i = 0; i < response.states.length; i++) {
 			let flight = new AirborneFlight(response.states[i])
-			if (!flight.isPlottable) { continue; }
+			if (!flight.isPlottable || flight.onGround) { continue; }
 
 			let marker = new AirborneFlightMarker(flight)
 			marker.addTo(appMap)
