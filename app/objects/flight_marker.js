@@ -1,12 +1,31 @@
 const leaflet = require('leaflet')
 require('leaflet-rotatedmarker')
 
-const airplaneIcon = leaflet.icon({
-    iconUrl: './img/airplane@2x.png',
+const airplaneIcon = (flight) => {
+  const altitude = flight.altitudeFt
+  let altitudeLevel
+
+  switch (true) {
+    case altitude >= 35000:
+      altitudeLevel = 'high'
+      break;
+    case altitude >= 20000:
+      altitudeLevel = 'medium'
+      break;
+    case altitude < 20000:
+      altitudeLevel = 'low'
+      break;
+    default:
+      altitudeLevel = 'default'
+  }
+
+  return leaflet.icon({
+    iconUrl: `./img/airplane-${altitudeLevel}.svg`,
     iconSize: [20, 20],
     iconAnchor: [10, 10],
     popupAnchor: [0, -5]
-})
+  })
+}
 
 const tooltipHtml = (flight, unit) => {
   let flightIdentifier, speed, altitude
@@ -32,7 +51,7 @@ const tooltipHtml = (flight, unit) => {
 module.exports = class AirborneFlightMarker extends leaflet.Marker {
   constructor(flight) {
     super([ flight.latitude, flight.longitude ], {
-      icon: airplaneIcon,
+      icon: airplaneIcon(flight),
       title: flight.callsign,
       rotationAngle: Math.round(flight.heading),
       rotationOrigin: 'center center'
